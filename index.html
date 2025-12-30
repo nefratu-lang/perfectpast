@@ -12,24 +12,37 @@
         body {
             font-family: 'Montserrat', sans-serif;
             background-color: #f0f4f8;
+            margin: 0;
+            overflow-x: hidden;
         }
         .heading-font {
             font-family: 'Playfair Display', serif;
         }
         .navy-blue { background-color: #001f3f; }
         .navy-text { color: #001f3f; }
+        @keyframes pulse-subtle {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.85; }
+        }
+        .animate-pulse-subtle {
+          animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
     </style>
-<script type="importmap">
+    <script type="importmap">
 {
   "imports": {
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react": "https://esm.sh/react@19",
+    "react-dom": "https://esm.sh/react-dom@19",
+    "react-dom/client": "https://esm.sh/react-dom@19/client",
     "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3"
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
   }
 }
 </script>
 </head>
 <body class="bg-slate-100">
     <div id="root"></div>
+    <!-- Uygulamanın çalışması için bu satır kritiktir -->
+    <script type="module" src="index.tsx"></script>
 </body>
 </html>

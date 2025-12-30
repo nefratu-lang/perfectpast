@@ -11,7 +11,6 @@ const App: React.FC = () => {
   const [lastFeedback, setLastFeedback] = useState<FeedbackData | null>(null);
 
   const startGame = () => {
-    // Shuffle the scenarios themselves
     const shuffled = [...SCENARIOS].sort(() => Math.random() - 0.5);
     setScenarios(shuffled);
     setCurrentIndex(0);
@@ -22,6 +21,7 @@ const App: React.FC = () => {
 
   const handleAnswer = (answer: string) => {
     const current = scenarios[currentIndex];
+    if (!current) return;
     const isCorrect = answer === current.correctAnswer;
     
     setScore(prev => isCorrect ? prev + 10 : prev - 5);
@@ -45,7 +45,6 @@ const App: React.FC = () => {
 
   const currentScenario = scenarios[currentIndex];
 
-  // Randomize the choices for the current scenario
   const choices = useMemo(() => {
     if (!currentScenario) return [];
     return [currentScenario.correctAnswer, currentScenario.incorrectAnswer]
@@ -54,7 +53,6 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
-      {/* Header */}
       <header className="bg-[#001f3f] text-white p-6 shadow-lg flex items-center justify-between">
         <div className="flex items-center gap-4">
           <i className="fas fa-anchor text-3xl text-yellow-500"></i>
@@ -106,7 +104,7 @@ const App: React.FC = () => {
               <div className="space-y-4">
                 {choices.map((choice, idx) => (
                   <button 
-                    key={idx}
+                    key={`${currentIndex}-${idx}`}
                     onClick={() => handleAnswer(choice)}
                     className="w-full p-6 border-2 border-slate-100 hover:border-[#001f3f] hover:bg-[#f8fafc] rounded-2xl transition-all text-left font-bold text-slate-700 flex items-center justify-between group shadow-sm hover:shadow-md"
                   >
@@ -116,14 +114,11 @@ const App: React.FC = () => {
                 ))}
               </div>
             </div>
-            <div className="text-center text-slate-400 text-xs uppercase tracking-widest font-bold">
-              <i className="fas fa-crosshairs mr-2"></i> Report with absolute precision
-            </div>
           </div>
         )}
 
         {gameState === 'FEEDBACK' && lastFeedback && (
-          <div className={`w-full bg-white rounded-2xl p-8 md:p-12 shadow-2xl border-l-8 transform transition-all ${lastFeedback.isCorrect ? 'border-green-500 animate-pulse-subtle' : 'border-red-500'}`}>
+          <div className={`w-full bg-white rounded-2xl p-8 md:p-12 shadow-2xl border-l-8 transform transition-all ${lastFeedback.isCorrect ? 'border-green-500' : 'border-red-500'}`}>
             <div className="flex items-center gap-5 mb-8">
               <div className={`w-14 h-14 rounded-full flex items-center justify-center text-white shadow-lg ${lastFeedback.isCorrect ? 'bg-green-500' : 'bg-red-500'}`}>
                 <i className={`fas ${lastFeedback.isCorrect ? 'fa-check' : 'fa-times'} text-2xl`}></i>
@@ -158,44 +153,20 @@ const App: React.FC = () => {
           <div className="text-center bg-white p-10 md:p-16 rounded-3xl shadow-2xl border-b-8 border-yellow-500 w-full">
             <div className="relative inline-block mb-8">
                 <i className="fas fa-award text-8xl text-yellow-500"></i>
-                <div className="absolute top-0 right-0 animate-ping w-4 h-4 bg-yellow-400 rounded-full"></div>
             </div>
             <h2 className="text-4xl font-bold navy-text mb-2 heading-font uppercase">Inspection Complete</h2>
-            <p className="text-slate-400 mb-8 font-bold tracking-widest uppercase text-sm">Final Efficiency Rating</p>
-            
             <div className="text-7xl font-black navy-text mb-12 drop-shadow-md">
               {score}
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <button 
-                onClick={startGame}
-                className="bg-[#001f3f] text-white py-5 rounded-2xl font-bold shadow-xl hover:bg-[#003366] transition-all uppercase tracking-widest"
-              >
-                Restart Mission
-              </button>
-              <button 
-                onClick={() => window.location.reload()}
-                className="bg-slate-100 text-slate-600 py-5 rounded-2xl font-bold hover:bg-slate-200 transition-all uppercase tracking-widest"
-              >
-                Exit Records
-              </button>
-            </div>
+            <button 
+              onClick={startGame}
+              className="w-full bg-[#001f3f] text-white py-5 rounded-2xl font-bold shadow-xl hover:bg-[#003366] transition-all uppercase tracking-widest"
+            >
+              Restart Mission
+            </button>
           </div>
         )}
       </main>
-
-      {/* Footer */}
-      <footer className="p-8 text-center">
-        <div className="flex justify-center gap-4 mb-2 text-slate-300">
-            <i className="fas fa-anchor"></i>
-            <i className="fas fa-compass"></i>
-            <i className="fas fa-life-ring"></i>
-        </div>
-        <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">
-            &copy; 2024 Naval English Training Center • Petty Officer Academy
-        </p>
-      </footer>
     </div>
   );
 };
